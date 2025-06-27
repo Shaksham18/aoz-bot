@@ -5,6 +5,7 @@ import pygetwindow as gw
 import win32gui
 import win32con
 from logger import log_step
+from constants import GAME_SHORTCUT, GAME_WINDOW_TITLE
 
 @dataclass
 class WindowRegion:
@@ -17,7 +18,7 @@ class WindowRegion:
     width: int
     height: int
 
-def activate_game_window(window_title):
+def activate_game_window(window_title=GAME_WINDOW_TITLE):
     """
     Finds and activates the game window by its title.
     Returns a WindowRegion object.
@@ -41,7 +42,7 @@ def activate_game_window(window_title):
         height=game_window.height,
     )
 
-def launch_game(shortcut_path):
+def launch_game(shortcut_path=GAME_SHORTCUT):
     """
     Launches the game using the provided shortcut or executable path.
     """
@@ -53,7 +54,7 @@ def launch_game(shortcut_path):
     time.sleep(5)  # Wait for the game to start (adjust as needed)
     log_step("Game launch command issued.")
 
-def close_game_window(window_title):
+def close_game_window(window_title=GAME_WINDOW_TITLE):
     """
     Closes the game window by sending WM_CLOSE.
     """

@@ -3,6 +3,12 @@ import time
 from image_utils import capture_screenshot, template_match
 from actions import click_button
 from logger import log_step
+from constants import (
+    GAME_SCREEN, NAVIGATION_EXPAND_FLEET, NAVIGATION_SEARCH_RESOURCE, RESOURCE_STEEL,
+    RESOURCE_SCREEN, RESOURCE_INCREASE, RESOURCE_GO, RESOURCE_GATHER, RESOURCE_DECREASE, RESOURCE_SETOUT,
+    TRAIN_BASIC_ROCKET_LAUNCHER, TRAIN_RECRUIT_BUTTON, CAMP1, CAMP2, FACTORY1, FACTORY2,
+    TRAINING_SCREEN, FACTORY_SCREEN, SIDE_MENU_SCREEN, NAVIGATION_SIDE_MENU
+)
 
 def click_and_log(region, template_img, screen_gray, x_offset=20, y_offset=20, desc=""):
     """
@@ -27,8 +33,8 @@ def check_fleets(region):
     Returns True if fleets are available, False otherwise.
     """
     log_step("Checking fleets availability...")
-    fleet_screen_gray = capture_screenshot(region, "sc/game_screen.png")
-    fleet_max_val, _ = template_match(fleet_screen_gray, "Images/navigation/expand_fleet.png")
+    fleet_screen_gray = capture_screenshot(region, GAME_SCREEN)
+    fleet_max_val, _ = template_match(fleet_screen_gray, NAVIGATION_EXPAND_FLEET)
     if fleet_max_val < 0.5:
         log_step("Fleets available.")
         if handle_search_resource(region, fleet_screen_gray):
@@ -45,7 +51,7 @@ def handle_search_resource(region, fleet_screen_gray):
     Handles clicking the search resource button and then the steel resource.
     """
     search_resource_max_val, search_resource_max_loc = template_match(
-        fleet_screen_gray, "Images/navigation/search_resource.png"
+        fleet_screen_gray, NAVIGATION_SEARCH_RESOURCE
     )
     if search_resource_max_val > 0.45:
         search_x, search_y = search_resource_max_loc
@@ -54,7 +60,7 @@ def handle_search_resource(region, fleet_screen_gray):
         log_step(f"Adjusted Click Position for Search Resource: x={search_x}, y={search_y}")
         click_button(region, search_x, search_y)
         time.sleep(1)
-        handle_resource(region, "Images/resource/steel/steel.png", "Steel")
+        handle_resource(region, RESOURCE_STEEL, "Steel")
         return True
     return False
 
@@ -63,7 +69,7 @@ def handle_resource(region, resource_template, resource_name):
     Handles clicking on a resource in the side menu and performing actions.
     """
     log_step("Capturing resource screen and matching resource template...")
-    resource_screen_gray = capture_screenshot(region, "sc/resource_screen.png")
+    resource_screen_gray = capture_screenshot(region, RESOURCE_SCREEN)
     resource_max_val, resource_max_loc = template_match(resource_screen_gray, resource_template)
     log_step(f"Resource Max Value: {resource_max_val}, Location: {resource_max_loc}")
     if resource_max_val <= 0.5:
@@ -78,37 +84,37 @@ def handle_resource(region, resource_template, resource_name):
     time.sleep(1)
 
     log_step("Trying to increase resource amount...")
-    if not click_and_log(region, "Images/resource/increase.png", resource_screen_gray, desc="Increase"):
+    if not click_and_log(region, RESOURCE_INCREASE, resource_screen_gray, desc="Increase"):
         return
 
     for i in range(5):
         log_step(f"Increasing resource amount (attempt {i+1})...")
-        click_and_log(region, "Images/resource/increase.png", resource_screen_gray, desc="Increase")
+        click_and_log(region, RESOURCE_INCREASE, resource_screen_gray, desc="Increase")
 
     time.sleep(1)
 
     log_step("Trying to click Go button...")
-    if not click_and_log(region, "Images/resource/go.png", resource_screen_gray, desc="Go Button"):
+    if not click_and_log(region, RESOURCE_GO, resource_screen_gray, desc="Go Button"):
         return
     time.sleep(1)
 
     for gather_attempt in range(4, 0, -1):
         log_step(f"Gathering resources (attempt {5-gather_attempt})...")
-        gather_screen_gray = capture_screenshot(region, "sc/gather_screen.png")
-        if click_and_log(region, "Images/resource/gather.png", gather_screen_gray, desc="Gather"):
-            click_and_log(region, "Images/resource/gather.png", gather_screen_gray, desc="Gather")
+        gather_screen_gray = capture_screenshot(region, GATHER_SCREEN)
+        if click_and_log(region, RESOURCE_GATHER, gather_screen_gray, desc="Gather"):
+            click_and_log(region, RESOURCE_GATHER, gather_screen_gray, desc="Gather")
             time.sleep(1)
-            setout_screen_gray = capture_screenshot(region, "sc/setout_screen.png")
-            if click_and_log(region, "Images/resource/setout.png", setout_screen_gray, desc="Set Out"):
+            setout_screen_gray = capture_screenshot(region, SETOUT_SCREEN)
+            if click_and_log(region, RESOURCE_SETOUT, setout_screen_gray, desc="Set Out"):
                 log_step("Set Out completed.")
                 return
             else:
                 log_step("Set Out button not found. Skipping.")
         else:
             log_step("Gather not found, trying to decrease resource amount...")
-            if click_and_log(region, "Images/resource/decrease.png", gather_screen_gray, desc="Decrease"):
+            if click_and_log(region, RESOURCE_DECREASE, gather_screen_gray, desc="Decrease"):
                 time.sleep(1)
-                if not click_and_log(region, "Images/resource/go.png", resource_screen_gray, desc="Go Button"):
+                if not click_and_log(region, RESOURCE_GO, resource_screen_gray, desc="Go Button"):
                     return
                 time.sleep(1)
             else:
@@ -135,8 +141,8 @@ def handle_training_or_recruit(region):
     """
     Handles training or recruiting after entering a camp/factory.
     """
-    training_screen_gray = capture_screenshot(region, "sc/training_screen.png")
-    training_max_val, training_max_loc = template_match(training_screen_gray, "Images/train/BasicRocketLauncher.png")
+    training_screen_gray = capture_screenshot(region, TRAINING_SCREEN)
+    training_max_val, training_max_loc = template_match(training_screen_gray, TRAIN_BASIC_ROCKET_LAUNCHER)
     if training_max_val > 0.5:
         training_x, training_y = training_max_loc
         training_x += region.left + 480
@@ -144,7 +150,7 @@ def handle_training_or_recruit(region):
         log_step(f"Adjusted Click Position for Training: x={training_x}, y={training_y}")
         click_button(region, training_x, training_y)
     else:
-        recruit_max_val, recruit_max_loc = template_match(training_screen_gray, "Images/train/recruitButton.png")
+        recruit_max_val, recruit_max_loc = template_match(training_screen_gray, TRAIN_RECRUIT_BUTTON)
         if recruit_max_val > 0.5:
             recruit_x, recruit_y = recruit_max_loc
             recruit_x += region.left + 20
@@ -175,8 +181,8 @@ def handle_side_menu(region):
     Handles opening the side menu and interacting with camps and factories.
     """
     log_step("Handling side menu...")
-    base_screen_gray = capture_screenshot(region, "sc/game_screen.png")
-    side_menu_max_val, side_menu_max_loc = template_match(base_screen_gray, "Images/navigation/side_menu.png")
+    base_screen_gray = capture_screenshot(region, GAME_SCREEN)
+    side_menu_max_val, side_menu_max_loc = template_match(base_screen_gray, NAVIGATION_SIDE_MENU)
     if side_menu_max_val > 0.5:
         side_menu_x, side_menu_y = side_menu_max_loc
         side_menu_x += region.left + 20
@@ -184,12 +190,12 @@ def handle_side_menu(region):
         log_step(f"Adjusted Click Position for Side Menu: x={side_menu_x}, y={side_menu_y}")
         click_button(region, side_menu_x, side_menu_y)
         time.sleep(1)
-        side_menu_screen_gray = capture_screenshot(region, "sc/side_menu_screen.png")
+        side_menu_screen_gray = capture_screenshot(region, SIDE_MENU_SCREEN)
         for camp, name in [
-            ("Images/navigation/camp1.png", "Camp 1"),
-            ("Images/navigation/camp2.png", "Camp 2"),
-            ("Images/navigation/factory1.png", "Factory 1"),
-            ("Images/navigation/factory2.png", "Factory 2"),
+            (CAMP1, "Camp 1"),
+            (CAMP2, "Camp 2"),
+            (FACTORY1, "Factory 1"),
+            (FACTORY2, "Factory 2"),
         ]:
             handle_camp(region, side_menu_screen_gray, camp, name)
     else:
