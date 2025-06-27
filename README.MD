@@ -1,6 +1,6 @@
 # Age of Origins Automation Bot
 
-This project automates gameplay actions in the "Age of Origins" Windows game using Python. It can launch the game, interact with the UI, manage fleets, resources, camps, and factories, and logs every step for easy debugging and auditing.
+This project automates gameplay actions in the "Age of Origins" Windows game using Python. It launches the game, interacts with the UI, manages fleets, resources, camps, and factories, and logs every step for easy debugging and auditing.
 
 ---
 
@@ -28,6 +28,8 @@ scripts/
 ├── image_utils.py       # Screenshot and template matching utilities
 ├── logger.py            # Thread-safe step logger
 ├── main.py              # Main entry point for the bot
+├── requirement.txt      # Python dependencies
+├── setup.py             # Project setup script
 ├── switch_account.py    # (Reserved for account switching automation)
 ├── window_utils.py      # Game window management (launch, maximize, close)
 └── __pycache__/         # Python bytecode cache
@@ -44,12 +46,12 @@ logs/
 - [OpenCV](https://pypi.org/project/opencv-python/)
 - [numpy](https://pypi.org/project/numpy/)
 - [pyautogui](https://pypi.org/project/pyautogui/)
-- [pygetwindow](https://pypi.org/project/PyGetWindow/)
+- [PyGetWindow](https://pypi.org/project/PyGetWindow/)
 - [pywin32](https://pypi.org/project/pywin32/)
 
 Install dependencies:
 ```bash
-pip install opencv-python numpy pyautogui PyGetWindow pywin32
+pip install -r scripts/requirement.txt
 ```
 
 ---
@@ -57,7 +59,7 @@ pip install opencv-python numpy pyautogui PyGetWindow pywin32
 ## Usage
 
 1. **Update the Game Shortcut Path:**
-   - In `constants.py`, set the correct path to your "Age of Origins" desktop shortcut:
+   - In `scripts/constants.py`, set the correct path to your "Age of Origins" desktop shortcut:
      ```python
      GAME_SHORTCUT = r"C:/Users/<YourUsername>/Desktop/Age of Origins.lnk"
      ```
