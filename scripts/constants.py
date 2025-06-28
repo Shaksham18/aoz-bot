@@ -32,6 +32,9 @@ RESOURCE_GO = os.path.join(IMAGES_DIR, "resource", "go.png")
 RESOURCE_GATHER = os.path.join(IMAGES_DIR, "resource", "gather.png")
 RESOURCE_DECREASE = os.path.join(IMAGES_DIR, "resource", "decrease.png")
 RESOURCE_SETOUT = os.path.join(IMAGES_DIR, "resource", "setout.png")
+CLAIM_REWARD = os.path.join(IMAGES_DIR, "firstLogin", "claim_reward.png")
+LOGIN_REWARD = os.path.join(IMAGES_DIR, "firstLogin", "login_reward.png")
+OUT_OF_SHADE = os.path.join(IMAGES_DIR, "firstLogin","out_of_shade.png")
 
 # Screenshot paths
 GAME_SCREEN = os.path.join(SC_DIR, "game_screen.png")
