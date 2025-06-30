@@ -4,7 +4,7 @@ from image_utils import capture_screenshot, template_match
 from actions import click_button
 from logger import log_step
 from constants import (
-    CLAIM_REWARD, GAME_SCREEN, GATHER_SCREEN, LOGIN_REWARD, NAVIGATION_EXPAND_FLEET, NAVIGATION_SEARCH_RESOURCE, OUT_OF_SHADE, RESOURCE_STEEL,
+    CLAIM_REWARD, CLOSE, GAME_SCREEN, GATHER_SCREEN, LOGIN_REWARD, NAVIGATION_EXPAND_FLEET, NAVIGATION_SEARCH_RESOURCE, POPUP_SCREEN, RESOURCE_STEEL,
     RESOURCE_SCREEN, RESOURCE_INCREASE, RESOURCE_GO, RESOURCE_GATHER, RESOURCE_DECREASE, RESOURCE_SETOUT, SETOUT_SCREEN,
     TRAIN_BASIC_ROCKET_LAUNCHER, TRAIN_RECRUIT_BUTTON, CAMP1, CAMP2, FACTORY1, FACTORY2,
     TRAINING_SCREEN, FACTORY_SCREEN, SIDE_MENU_SCREEN, NAVIGATION_SIDE_MENU
@@ -211,12 +211,16 @@ def check_login_rewards(region):
     login_max_val, login_max_loc = template_match(login_screen_gray, LOGIN_REWARD)
     if login_max_val > 0.5:
         login_x, login_y = login_max_loc
-        login_x += (region.left - 20)
-        login_y += (region.top - 100)
+        login_x += region.left - 20
+        login_y += region.top - 100
         click_and_log(region, CLAIM_REWARD, login_screen_gray, desc="Claim Reward")
         time.sleep(2)
+        click_button(region, login_x, login_y)
+        log_step("Login reward claimed.")
+        time.sleep(2)
         for _ in range(5):
-            click_button(region, login_x, 300)
+            popup_screen_gray = capture_screenshot(region, POPUP_SCREEN)
+            click_and_log(region, CLOSE, popup_screen_gray, desc="Close Popups")
             time.sleep(2)
     else:
         log_step("No login rewards found.")

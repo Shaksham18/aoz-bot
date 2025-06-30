@@ -23,7 +23,7 @@ def main():
         log_step(f"Exception occurred: {e}")
         raise
     finally:
-        # close_game_window(GAME_WINDOW_TITLE)
+        close_game_window(GAME_WINDOW_TITLE)
         log_step("=== Bot finished ===")
 
 if __name__ == "__main__":
