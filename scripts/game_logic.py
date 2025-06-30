@@ -1,5 +1,6 @@
 import sys
 import time
+
 from image_utils import capture_screenshot, template_match
 from actions import click_button
 from logger import log_step
@@ -9,6 +10,7 @@ from constants import (
     TRAIN_BASIC_ROCKET_LAUNCHER, TRAIN_RECRUIT_BUTTON, CAMP1, CAMP2, FACTORY1, FACTORY2,
     TRAINING_SCREEN, FACTORY_SCREEN, SIDE_MENU_SCREEN, NAVIGATION_SIDE_MENU
 )
+from window_utils import activate_window_by_title
 
 def click_and_log(region, template_img, screen_gray, x_offset=20, y_offset=20, desc=""):
     """
@@ -218,9 +220,10 @@ def check_login_rewards(region):
         click_button(region, login_x, login_y)
         log_step("Login reward claimed.")
         time.sleep(2)
-        for _ in range(5):
+    for _ in range(5):
             popup_screen_gray = capture_screenshot(region, POPUP_SCREEN)
             click_and_log(region, CLOSE, popup_screen_gray, desc="Close Popups")
             time.sleep(2)
     else:
         log_step("No login rewards found.")
+
