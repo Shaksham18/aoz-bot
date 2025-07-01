@@ -10,7 +10,6 @@ from constants import (
     TRAIN_BASIC_ROCKET_LAUNCHER, TRAIN_RECRUIT_BUTTON, CAMP1, CAMP2, FACTORY1, FACTORY2,
     TRAINING_SCREEN, FACTORY_SCREEN, SIDE_MENU_SCREEN, NAVIGATION_SIDE_MENU
 )
-from window_utils import activate_window_by_title
 
 def click_and_log(region, template_img, screen_gray, x_offset=20, y_offset=20, desc=""):
     """
