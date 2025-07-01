@@ -1,4 +1,9 @@
 from setuptools import setup, find_packages
+import os
+
+# Ensure the 'sc' folder exists for screenshots
+sc_dir = os.path.join(os.path.dirname(__file__), "sc")
+os.makedirs(sc_dir, exist_ok=True)
 
 setup(
     name="age_of_origins_bot",
